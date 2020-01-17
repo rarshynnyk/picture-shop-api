@@ -1,0 +1,26 @@
+{
+  "name": "picture-shop-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rarshynnyk/picture-shop-api.git"
+  },
+  "author": "Ruslan Arshynnyk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rarshynnyk/picture-shop-api/issues"
+  },
+  "homepage": "https://github.com/rarshynnyk/picture-shop-api#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
