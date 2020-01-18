@@ -1,7 +1,6 @@
 {
   "env": {
-    "MONGO_USERNAME": "rarshynnyk",
-    "MONGO_PASSWORD": "rfyfhtqrf,tpevf",
+    "MONGO_CONNECT": "mongodb+srv://rarshynnyk:<password>@cluster0-jcmsn.mongodb.net/test?retryWrites=true&w=majority",
     "JWT_SECRET": "secret"
   }
 }
