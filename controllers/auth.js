@@ -1,12 +1,10 @@
-const express = require("express");
-const router = express.Router();
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const User = require("../../models/user");
+const User = require("../models/user");
 
-router.post("/signup", async (req, res) => {
+exports.signUp = async (req, res) => {
   try {
     const existedUser = await User.find({ email: req.body.email });
 
@@ -35,9 +33,9 @@ router.post("/signup", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error });
   }
-});
+};
 
-router.post("/signin", async (req, res) => {
+exports.signIn = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email }).select(
       "_id email password"
@@ -78,6 +76,4 @@ router.post("/signin", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error });
   }
-});
-
-module.exports = router;
+};
