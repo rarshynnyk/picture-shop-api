@@ -1,6 +1,7 @@
 {
   "env": {
     "MONGO_USERNAME": "rarshynnyk",
-    "MONGO_PASSWORD": "rfyfhtqrf,tpevf"
+    "MONGO_PASSWORD": "rfyfhtqrf,tpevf",
+    "JWT_SECRET": "secret"
   }
 }

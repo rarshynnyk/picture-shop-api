@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
+const auth = require("../../middlewares/auth");
 
-const Product = require("../../models/products");
+const Product = require("../../models/product");
 
 router.get("/", async (_, res) => {
   try {
@@ -17,72 +18,70 @@ router.get("/", async (_, res) => {
   }
 });
 
-router.post("/", (req, res) => {
-  const product = new Product({
-    _id: new mongoose.Types.ObjectId(),
-    name: req.body.name,
-    price: req.body.price
-  });
-
-  product
-    .save()
-    .then(result => {
-      res.status(201).json({
-        message: "Product was successfully created",
-        data: product
-      });
-    })
-    .catch(error => {
-      res.status(500).json({ error });
+router.post("/", auth, async (req, res) => {
+  try {
+    const product = new Product({
+      _id: new mongoose.Types.ObjectId(),
+      name: req.body.name,
+      price: req.body.price
     });
+
+    const result = await product.save();
+
+    res.status(201).json({
+      message: "Product successfully created",
+      data: result
+    });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   const id = req.params.id;
 
-  Product.findById(id)
-    .exec()
-    .then(result => {
-      if (!result) {
-        return res.status(404).json({ message: "Item not found" });
-      }
+  try {
+    const result = await Product.findById(id);
 
-      res.status(200).json(result);
-    })
-    .catch(error => {
-      res.status(500).json({ error });
-    });
+    if (!result) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 });
 
-router.patch("/:id", (req, res) => {
+router.patch("/:id", auth, async (req, res) => {
   const id = req.params.id;
 
-  Product.update({ _id: id }, { $set: req.body })
-    .exec()
-    .then(result => {
-      res.status(200).json({
-        message: "Product was successfully updated",
-        data: result
-      });
-    })
-    .catch(error => {
-      res.status(500).json({ error });
+  try {
+    const result = await Product.update({ _id: id }, { $set: req.body });
+
+    res.status(200).json({
+      message: "Product was successfully updated",
+      data: result
     });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   const id = req.params.id;
-  Product.remove({ _id: id })
-    .exec()
-    .then(result => {
-      if (!result) {
-        return res.status(404).json({ message: "Item not found" });
-      }
-      res.status(200).json(result);
-    })
-    .catch(error => {
-      res.status(500).json({ error });
-    });
+
+  try {
+    const result = await Product.remove({ _id: id });
+
+    if (!result) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 });
 
 module.exports = router;

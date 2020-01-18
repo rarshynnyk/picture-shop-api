@@ -2,13 +2,18 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 
-const Order = require("../../models/order");
-const Product = require("../../models/products");
+const auth = require("../../middlewares/auth");
 
-router.get("/", async (_, res) => {
+const Order = require("../../models/order");
+const Product = require("../../models/product");
+
+router.get("/", auth, async (_, res) => {
   try {
     const total = await Order.countDocuments();
-    const items = await Order.find().select("_id product quantity");
+    const items = await Order.find()
+      .select("_id product quantity")
+      .populate("product", "name price");
+
     res.status(200).json({
       total,
       items
@@ -18,7 +23,7 @@ router.get("/", async (_, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   try {
     const product = await Product.findById(req.body.product);
 
@@ -45,11 +50,13 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", auth, async (req, res) => {
   const id = req.params.id;
 
   try {
-    const result = await Order.findById(id).select("_id quantity product");
+    const result = await Order.findById(id)
+      .select("_id quantity product")
+      .populate("product", "name price");
 
     if (!result) {
       return res.status(404).json({ message: "Order not found" });
@@ -63,7 +70,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   const id = req.params.id;
 
   try {

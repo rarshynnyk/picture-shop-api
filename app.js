@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
+const userRoutes = require("./api/routes/user");
 const productRoutes = require("./api/routes/products");
 const orderRoutes = require("./api/routes/orders");
 
@@ -13,7 +14,7 @@ mongoose.connect(
     ":" +
     process.env.MONGO_PASSWORD +
     "@cluster0-jcmsn.mongodb.net/test?retryWrites=true&w=majority",
-  { useNewUrlParser: true, useUnifiedTopology: true }
+  { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }
 );
 
 app.use(morgan("dev"));
@@ -34,6 +35,7 @@ app.use((req, res, next) => {
 
 app.use("/products", productRoutes);
 app.use("/orders", orderRoutes);
+app.use("/user", userRoutes);
 
 app.use((req, res, next) => {
   const error = new Error("Not found");
